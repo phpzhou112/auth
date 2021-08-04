@@ -21,4 +21,5 @@ func main() {
 	if err := r.Run(":8600").Error(); err != "" {
 		panic("发生错误")
 	}
+
 }
