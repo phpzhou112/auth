@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	// 1.创建路由
 	r := gin.Default()
 	// 2.绑定路由规则，执行的函数
@@ -14,6 +15,7 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "你好!这是gin")
 	})
+
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
 	if err := r.Run(":8600").Error(); err != "" {
