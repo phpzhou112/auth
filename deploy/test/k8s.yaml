@@ -16,6 +16,8 @@ spec:
         - image: 1123/jenkins-demo:<BUILD_TAG>
           imagePullPolicy: IfNotPresent
           name: jenkins-demo
+          ports:
+            - containerPort: 30000
           env:
-            - name: branch
-              value: <BRANCH_NAME>
+            - name: APP_NAME
+                value: <APP_NAME>

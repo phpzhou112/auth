@@ -1,9 +1,13 @@
 FROM golang
 
-ADD . /go/src/app
+ARG APPNAME
 
-WORKDIR /go/src/app
+WORKDIR /
 
-RUN GOOS=linux GOARCH=386 go build -v -o /go/src/app/jenkins-app
+ADD $APPNAME /go_app
+
+EXPOSE 30000
+
+RUN go build -v -o ./jenkins-app
 
 CMD ["./jenkins-app"]
