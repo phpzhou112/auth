@@ -1,4 +1,6 @@
-node('zh-jnlp') {
+pipeline {
+    agent any
+
     environment {
         APP_NAME='auth'
         APP_ENV='test'
