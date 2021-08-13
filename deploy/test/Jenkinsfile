@@ -1,38 +1,36 @@
-pipeline {
-    agent any
-
-    environment {
-        APP_NAME='auth'
-        APP_ENV='test'
-        DEPLOY_ENV='测试环境'
-        // 应用tag
-        APP_TAG="${env.APP_ENV}-${env.GIT_COMMIT}"
-        // Git提交ID
-        GIT_COMMIT=sh(returnStdout: true, script: 'git describe --tags --always').trim()
-    }
-    stages {
+node('zh-jnlp') {
+    stage('Prepare') {
+            echo "1.Prepare Stage"
+            checkout scm
+            script {
+                APP_NAME='auth'
+                APP_ENV='test'
+                DEPLOY_ENV='测试环境'
+                // 应用tag
+                APP_TAG="${env.APP_ENV}-${env.GIT_COMMIT}"
+                // Git提交ID
+                GIT_COMMIT=sh(returnStdout: true, script: 'git describe --tags --always').trim()
+            }
+        }
       stage('Clone') {
             echo "1.Clone Stage"
             git url: "https://github.com/phpzhou112/auth.git"
         }
 
         stage('Build Docker') {
-           echo "输出本次构建环境变量\n应用名：${env.APP_NAME}\n环境：${env.APP_ENV}\nGIT提交ID：${env.GIT_COMMIT}\n应用TAG：${env.APP_TAG}\n部署环境"
-            sh "docker build -t 1123/jenkins-demo:${env.APP_TAG} --build-arg APPNAME=${env.APP_NAME} -f deploy/${env.APP_ENV}/Dockerfile ."
+            sh "docker build -t 1123/jenkins-demo:${APP_TAG} --build-arg APPNAME=${APP_NAME} -f deploy/${APP_ENV}/Dockerfile ."
         }
         stage('Push Docker') {
             echo "3.Push Docker Image Stage"
             withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
                 sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
-                sh "docker push 1123/jenkins-demo:${env.APP_TAG}"
+                sh "docker push 1123/jenkins-demo:${APP_TAG}"
             }
         }
         stage('Deploy') {
             echo "4. Deploy Stage"
-            sh "sed -i 's/<BUILD_TAG>/${env.APP_TAG}/' deploy/${env.APP_ENV}/k8s.yaml"
-            sh "sed -i 's/<APP_NAME>/${env.APP_NAME}/' deploy/${env.APP_ENV}/k8s.yaml"
-            sh "kubectl apply -f deploy/${env.APP_ENV}/k8s.yaml --record"
+            sh "sed -i 's/<BUILD_TAG>/${APP_TAG}/' deploy/${APP_ENV}/k8s.yaml"
+            sh "sed -i 's/<APP_NAME>/${APP_NAME}/' deploy/${APP_ENV}/k8s.yaml"
+            sh "kubectl apply -f deploy/${APP_ENV}/k8s.yaml --record"
         }
-    }
-
 }
