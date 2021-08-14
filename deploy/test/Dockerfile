@@ -1,13 +1,7 @@
 FROM golang
-
-ARG APPNAME
-
-WORKDIR /
-
-ADD $APPNAME /go_app
-
+ADD . /go_app
+WORKDIR /go_app
 EXPOSE 30000
-
-RUN go build -v -o ./jenkins-app
+RUN go build -v -o /go_app/jenkins-app
 
 CMD ["./jenkins-app"]
