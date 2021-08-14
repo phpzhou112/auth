@@ -18,7 +18,7 @@ node('zh-jnlp') {
         }
 
         stage('Build Docker') {
-            sh "docker build -t 1123/jenkins-demo:${APP_TAG} --build-arg APPNAME=${APP_NAME} -f deploy/${APP_ENV}/Dockerfile ."
+            sh "docker build -t 1123/jenkins-demo:${APP_TAG} -f deploy/${APP_ENV}/Dockerfile ."
         }
         stage('Push Docker') {
             echo "3.Push Docker Image Stage"
