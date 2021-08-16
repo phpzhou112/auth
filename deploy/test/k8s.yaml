@@ -15,11 +15,23 @@ spec:
       containers:
         - image: 1123/jenkins-demo:<BUILD_TAG>
           imagePullPolicy: IfNotPresent
+          name: jenkins-demo
           ports:
-          - name: jenkins-demo
-            port: 30000
-            targetPort: jenkins-demo
-            nodePort: 30010
+            - containerPort: 30000
           env:
             - name: APP_NAME
               value: <APP_NAME>
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-demo
+  namespace: default
+spec:
+  ports:
+    - port: 8010
+      targetPort: 30000
+  selector:
+    app: <APP_NAME>
