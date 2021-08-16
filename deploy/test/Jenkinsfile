@@ -5,11 +5,11 @@ node('zh-jnlp') {
             script {
                 APP_NAME='auth'
                 APP_ENV='test'
-                DEPLOY_ENV='测试环境'
-                // 应用tag
-                APP_TAG="${env.APP_ENV}-${env.GIT_COMMIT}"
+                DEPLOY_ENV='测试环境
                 // Git提交ID
                 GIT_COMMIT=sh(returnStdout: true, script: 'git describe --tags --always').trim()
+                 // 应用tag
+                APP_TAG="${APP_ENV}-${GIT_COMMIT}"
             }
         }
       stage('Clone') {

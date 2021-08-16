@@ -20,4 +20,4 @@ spec:
             - containerPort: 30000
           env:
             - name: APP_NAME
-                value: <APP_NAME>
+              value: <APP_NAME>
