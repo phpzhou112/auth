@@ -18,6 +18,7 @@ spec:
           name: jenkins-demo
           ports:
             - containerPort: 30000
+              hostPort: 8010
           env:
             - name: APP_NAME
               value: <APP_NAME>
