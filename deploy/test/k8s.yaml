@@ -29,10 +29,14 @@ kind: Service
 metadata:
   name: jenkins-demo
   namespace: default
+  labels:
+    app: jenkins-demo
 spec:
-  ports:
-    - port: 8010
-      targetPort: 30000
   selector:
-    app: <APP_NAME>
+    app: jenkins-demo
   type: NodePort
+  ports:
+    - name: web
+      port: 30000
+      targetPort: web
+      nodePort: 8010
