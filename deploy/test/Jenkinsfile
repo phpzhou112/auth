@@ -5,7 +5,7 @@ node('zh-jnlp') {
             script {
                 APP_NAME='auth'
                 APP_ENV='test'
-                DEPLOY_ENV='测试环境
+                DEPLOY_ENV='测试环境'
                 // Git提交ID
                 GIT_COMMIT=sh(returnStdout: true, script: 'git describe --tags --always').trim()
                  // 应用tag
