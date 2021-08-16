@@ -35,3 +35,4 @@ spec:
       targetPort: 30000
   selector:
     app: <APP_NAME>
+  type: NodePort
