@@ -39,4 +39,4 @@ spec:
     - name: web
       port: 30000
       targetPort: web
-      nodePort: 8010
+      nodePort: 38010
