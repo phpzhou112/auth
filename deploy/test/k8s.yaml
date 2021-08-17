@@ -22,22 +22,3 @@ spec:
           env:
             - name: APP_NAME
               value: <APP_NAME>
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: jenkins-demo
-  namespace: default
-  labels:
-    app: jenkins-demo
-spec:
-  selector:
-    app: jenkins-demo
-  type: NodePort
-  ports:
-    - name: web
-      port: 30000
-      targetPort: web
-      nodePort: 32010
