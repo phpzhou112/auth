@@ -17,7 +17,7 @@ spec:
           imagePullPolicy: Always
           name: jenkins-demo
           ports:
-            - containerPort: 80
+            - containerPort: 1234
           env:
             - name: APP_NAME
               value: <APP_NAME>
@@ -36,5 +36,5 @@ spec:
   type: NodePort
   ports:
     - port: 8888
-      targetPort: 80
+      targetPort: 1234
       nodePort: 32010
