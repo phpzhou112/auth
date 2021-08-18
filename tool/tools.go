@@ -1,5 +1,7 @@
 package tool
 
+import "reflect"
+
 // 排序
 
 /*
@@ -9,3 +11,9 @@ sort.SliceStable(arr, func(i, j int) bool {
 	})
 
 */
+
+// 查看interface类型
+func GetInterfaceType(i interface{}) reflect.Type {
+	val := reflect.ValueOf(i)
+	return reflect.Indirect(val).Type()
+}
