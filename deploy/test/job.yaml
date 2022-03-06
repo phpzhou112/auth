@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: resouer/ubuntu-bc
+        command: ["sh", "-c", "echo 'scale=100; 4*a(1)' | bc -l "]
+      restartPolicy: Never
+  backoffLimit: 4
+  activeDeadlineSeconds: 100
+
+
+
+#1111
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  parallelism: 2 #一个 Job 在任意时间最多可以启动多少个 Pod 同时运行
+  completions: 4 #Job 至少要完成的 Pod 数目，即 Job 的最小完成数
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: resouer/ubuntu-bc
+        command: ["sh", "-c", "echo 'scale=5000; 4*a(1)' | bc -l "]
+      restartPolicy: Never
+  backoffLimit: 4
+
+
+ #工作队列
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-wq-1
+spec:
+  completions: 8
+  parallelism: 2
+  template:
+    metadata:
+      name: job-wq-1
+    spec:
+      containers:
+      - name: c
+        image: myrepo/job-wq-1
+        env:
+        - name: BROKER_URL
+          value: amqp://guest:guest@rabbitmq-service:5672
+        - name: QUEUE
+          value: job1
+      restartPolicy: OnFailure

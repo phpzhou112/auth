@@ -1,0 +1,60 @@
+pipeline {
+   agent any
+
+   environment {
+        // 本文件修改这里前2个参数即可，其他地方不需要改动
+        APP_NAME='auth'
+        APP_ENV='production'
+        GIT_COMMIT=sh(returnStdout: true, script: 'git describe --tags --always').trim()
+        APP_TAG="${env.APP_ENV}-${env.GIT_COMMIT}"
+    }
+
+   stages {
+       stage('Prepare') {
+         steps {
+            echo env.APP_NAME
+            echo env.APP_ENV
+            echo env.GIT_COMMIT
+            echo env.APP_TAG
+            echo 'prepare ok'
+         }
+      }
+      stage('Build GO') {
+         steps {
+            sh '''
+            source /etc/profile
+            go version
+            go env
+            CGO_ENABLED=0 go build -o $APP_NAME
+            '''
+            echo 'build go ok'
+         }
+      }
+      stage('Build Docker') {
+         steps {
+            sh "docker build -t registry-vpc.cn-beijing.aliyuncs.com/nicaifu_docker/${env.APP_NAME}:${env.APP_TAG} --build-arg APPNAME=${APP_NAME} -f deploy/${APP_ENV}/Dockerfile ."
+            echo 'build docker ok'
+         }
+      }
+      stage('Push Docker') {
+         steps {
+            sh "docker push "
+            echo 'push docker ok'
+         }
+      }
+      stage('Deploy') {
+         steps {
+            sh "sed -i 's|<APP_NAME>|${env.APP_NAME}|' deploy/${APP_ENV}/k8s.yaml"
+            sh "sed -i 's|<APP_TAG>|${env.APP_TAG}|' deploy/${APP_ENV}/k8s.yaml"
+            sh "sed -i 's|<APP_ENV>|${env.APP_ENV}|' deploy/${APP_ENV}/k8s.yaml"
+            sh "/var/lib/jenkins/kubectl apply -f deploy/${APP_ENV}/k8s.yaml --record"
+            echo 'deploy ok'
+         }
+      }
+      stage('Cleanup') {
+           steps {
+              echo 'cleanup ok'
+           }
+        }
+   }
+}
